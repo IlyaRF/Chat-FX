@@ -1,14 +1,27 @@
 package com.example.javafxchat.client;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 
 public class ChatController {
-    @FXML
-    private Label welcomeText;
 
     @FXML
-    protected void onHelloButtonClick() {
-        welcomeText.setText("Welcome to JavaFX Application!");
+    public TextField messageField;
+
+    @FXML
+    public TextArea messageArea;
+
+    public void clickSendButton() {
+
+            final String message = messageField.getText();
+            if (message.isBlank()) {
+                return;
+            }
+
+            messageArea.appendText(message + "\n");
+            messageField.clear();
+            messageField.requestFocus();
+
+        }
     }
-}
