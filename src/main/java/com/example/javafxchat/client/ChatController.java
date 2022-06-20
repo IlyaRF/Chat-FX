@@ -30,13 +30,18 @@ public class ChatController {
 
     private void showNotification() {
         final Alert alert = new Alert(Alert.AlertType.ERROR,
-                "Не могу подключиться к серрверу",
-                new ButtonType("Попробовать снова", ButtonBar.ButtonData.OK_DONE),
+                "Не могу подключиться к серрверу \n" +
+                        "Проверьте сервер",
+                        new ButtonType("Попробовать снова",
+                                ButtonBar.ButtonData.OK_DONE),
                 new ButtonType("Выйти", ButtonBar.ButtonData.CANCEL_CLOSE)
         );
         alert.setTitle("Ошибка подключения");
-        Optional<ButtonType> answer = alert.showAndWait();
-        Boolean isExit = answer.map(select -> select.getButtonData().isCancelButton()).orElse(false);
+        final Optional<ButtonType> answer = alert.showAndWait();
+        final Boolean isExit = answer.map(select -> select.getButtonData().isCancelButton()).orElse(false);
+        if (isExit) {
+            System.exit(0);
+        }
     }
 
     public void clickSendButton() {
