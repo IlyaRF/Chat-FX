@@ -24,6 +24,7 @@ public class ChatClient {
         out = new DataOutputStream(socket.getOutputStream());
         new Thread(() -> {
             try {
+                waitAuth();
                 readMessages();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -33,9 +34,20 @@ public class ChatClient {
         }).start();
     }
 
+    private void waitAuth() throws IOException {
+        while (true) {
+            final String message = in.readUTF();
+            if (message.startsWith("/autOk")) {
+                String[] split = message.split("\\p{Blank}+");
+                String nick = split[1];
+                controller.addMessage("Успешная авторизация " + nick);
+                break;
+            }
+        }
+    }
 
 
-            private void closeConnection () {
+    private void closeConnection () {
                 if (in != null) {
                     try {
                         in.close();
