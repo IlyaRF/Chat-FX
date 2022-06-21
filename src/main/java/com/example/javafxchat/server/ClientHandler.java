@@ -23,6 +23,7 @@ public class ClientHandler {
             this.out = new DataOutputStream(socket.getOutputStream());
             new Thread(() -> {
                 try {
+                    authenticate();
                     readMessage();
                 } finally {
                     closeConnection();
@@ -44,6 +45,31 @@ public class ClientHandler {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+    }
+
+    private void authenticate() {
+        while (true) {
+            try {
+                String message = in.readUTF();
+                if (message.startsWith("/auth")) {
+                    String[] split = message.split("\\p{Blank}");
+                    String login = split[1];
+                    String password = split[2];
+                    String nick = authService.getNickByLoginAndPassword(login, password);
+                    if (nick != null) {
+                        sendMessage("/authOk " + nick);
+                        this.nick = nick;
+                        server.broadcast("Пользователь " + nick + " зашел в чат");
+                        server.subscribe(this);
+                        break;
+                    } else {
+                        sendMessage("Неверный логин или пароль");
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private void closeConnection() {

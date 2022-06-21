@@ -32,4 +32,8 @@ public class ChatServer {
             client.sendMessage(message);
         }
     }
+
+    public void subscribe(ClientHandler client) {
+        clients.add(client);
+    }
 }
