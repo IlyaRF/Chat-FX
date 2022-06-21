@@ -52,11 +52,14 @@ public class ClientHandler {
             try {
                 String message = in.readUTF();
                 if (message.startsWith("/auth")) {
-                    String[] split = message.split("\\p{Blank}");
+                    String[] split = message.split("\\p{Blank}+");
                     String login = split[1];
                     String password = split[2];
                     String nick = authService.getNickByLoginAndPassword(login, password);
                     if (nick != null) {
+                        if (server.isNickBusy(nick)) {
+                            sendMessage("Пользователь авторизован");
+                        }
                         sendMessage("/authOk " + nick);
                         this.nick = nick;
                         server.broadcast("Пользователь " + nick + " зашел в чат");
@@ -91,6 +94,7 @@ public class ClientHandler {
             }
         }
         if (socket != null) {
+            server.unsubscribe(this);
             try {
                 socket.close();
             } catch (IOException e) {
@@ -105,5 +109,9 @@ public class ClientHandler {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public String getNick() {
+        return nick;
     }
 }

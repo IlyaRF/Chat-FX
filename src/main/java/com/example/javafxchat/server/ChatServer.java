@@ -36,4 +36,17 @@ public class ChatServer {
     public void subscribe(ClientHandler client) {
         clients.add(client);
     }
+
+    public boolean isNickBusy(String nick) {
+        for (ClientHandler client : clients) {
+            if (nick.equals(client.getNick())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void unsubscribe(ClientHandler client) {
+        clients.remove(client);
+    }
 }
