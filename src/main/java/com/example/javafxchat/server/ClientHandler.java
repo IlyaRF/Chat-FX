@@ -11,12 +11,14 @@ public class ClientHandler {
     private DataInputStream in;
     private DataOutputStream out;
     private String nick;
+    private AuthService authService;
 
-    public ClientHandler(Socket socket, ChatServer server) {
+    public ClientHandler(Socket socket, ChatServer server, AuthService authService) {
 
         try {
             this.server = server;
             this.socket = socket;
+            this.authService = authService;
             this.in = new DataInputStream(socket.getInputStream());
             this.out = new DataOutputStream(socket.getOutputStream());
             new Thread(() -> {
