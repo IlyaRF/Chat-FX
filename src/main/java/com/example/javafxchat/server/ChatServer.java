@@ -3,9 +3,7 @@ package com.example.javafxchat.server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -19,7 +17,7 @@ public class ChatServer {
 
     public void run() {
         try (ServerSocket serverSocket = new ServerSocket(8189);
-             AuthService authService = new inMemoryAuthService()) {
+             AuthService authService = new InMemoryAuthService()) {
             while (true) {
                 System.out.println("Ожидаю подключения...");
                 final Socket socket = serverSocket.accept();

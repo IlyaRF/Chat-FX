@@ -16,8 +16,6 @@ public class ChatClientApp extends Application {
         stage.setScene(scene);
         stage.show();
 
-        ChatController controller = fxmlLoader.getController();
-        stage.setOnCloseRequest(event -> controller.getClient().sendMessage("/end"));
 
     }
 
