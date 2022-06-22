@@ -41,6 +41,14 @@ public class ClientHandler {
                 if ("/end".equals(message)) {
                     break;
                 }
+                if (message == "/privateMessage") {
+
+                    final String[] params = message.split("\\p{Blank}+");
+                    String nick = params[1];
+                    String message = params[2];
+                    server.sendPrivateMessage(this, params[0], params[1]);
+                    continue;
+                }
                 server.broadcast(nick + " : " + message);
             } catch (IOException e) {
                 e.printStackTrace();

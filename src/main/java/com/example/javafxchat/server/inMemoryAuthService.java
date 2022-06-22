@@ -11,12 +11,11 @@ public class inMemoryAuthService implements AuthService {
         private String login;
         private String password;
 
-        private UserData(String nick, String login, String password) {
+        public UserData(String nick, String login, String password) {
             this.nick = nick;
             this.login = login;
             this.password = password;
         }
-
 
         public String getNick() {
             return nick;
@@ -35,19 +34,19 @@ public class inMemoryAuthService implements AuthService {
 
     public inMemoryAuthService() {
         users = new ArrayList<>();
-        for (int i = 0; i < 5 ; i++) {
-           users.add(new UserData("nick" + i, "loin" + i, "password" + i ));
+        for (int i = 0; i < 5; i++) {
+            users.add(new UserData("nick" + i, "login" + i, "pass" + i));
         }
     }
 
     @Override
     public String getNickByLoginAndPassword(String login, String password) {
-        for (UserData user: users) {
-            if (login.equals(user.getLogin()) && password.equals(user.getPassword())) {
-                return user.getNick();
-            }
-        }
-    return null;
+        return users.stream()
+                .filter(user -> login.equals(user.getLogin())
+                        && password.equals(user.getPassword()))
+                .findFirst()
+                .map(UserData::getNick)
+                .orElse(null);
     }
 
     @Override

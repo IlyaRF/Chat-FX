@@ -58,8 +58,9 @@ public class ChatController {
     }
 
     public void addMessage(String message) {
-        if (message.isBlank()) {
-            return;
-        }
+        messageArea.appendText(message + "\n");
+    }
+    public ChatClient getClient() {
+        return client;
     }
 }

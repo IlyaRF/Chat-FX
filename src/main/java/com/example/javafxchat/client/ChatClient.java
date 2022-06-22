@@ -83,11 +83,11 @@ public class ChatClient {
                 }
             }
 
-            public void sendMessage(String message) {
-                try {
-                    out.writeUTF(message);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+    void sendMessage(String message) {
+        try {
+            out.writeUTF(message);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

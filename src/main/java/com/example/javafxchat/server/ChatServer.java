@@ -4,22 +4,25 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class ChatServer {
 
-    private List<ClientHandler> clients;
-    public ChatServer() {
-        this.clients = new ArrayList<>();
+    private final Map<String, ClientHandler> clients;
 
+    public ChatServer() {
+        this.clients = new HashMap<>();
     }
 
     public void run() {
-        try(ServerSocket serverSocket = new ServerSocket(8189);
-            AuthService authService = new inMemoryAuthService()) {
+        try (ServerSocket serverSocket = new ServerSocket(8189);
+             AuthService authService = new inMemoryAuthService()) {
             while (true) {
-                System.out.println("Ожидание подключения...");
-                Socket socket = serverSocket.accept();
+                System.out.println("Ожидаю подключения...");
+                final Socket socket = serverSocket.accept();
                 new ClientHandler(socket, this, authService);
                 System.out.println("Клиент подключен");
             }
@@ -27,26 +30,41 @@ public class ChatServer {
             e.printStackTrace();
         }
     }
+
+    public void subscribe(ClientHandler client) {
+        clients.put(client.getNick(), client);
+        broadcastClientsList();
+    }
+
+    public boolean isNickBusy(String nick) {
+        return clients.get(nick) != null;
+    }
+
+    private void broadcastClientsList() {
+        final String nicks = clients.values().stream()
+                .map(ClientHandler::getNick)
+                .collect(Collectors.joining(" "));
+        broadcast(nicks);
+    }
+
     public void broadcast(String message) {
-        for (ClientHandler client : clients) {
+        for (ClientHandler client : clients.values()) {
             client.sendMessage(message);
         }
     }
 
-    public void subscribe(ClientHandler client) {
-        clients.add(client);
-    }
-
-    public boolean isNickBusy(String nick) {
-        for (ClientHandler client : clients) {
-            if (nick.equals(client.getNick())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public void unsubscribe(ClientHandler client) {
-        clients.remove(client);
+        clients.remove(client.getNick());
+        broadcastClientsList();
+    }
+
+    public void sendPrivateMessage(ClientHandler from, String nickTo, String message) {
+        final ClientHandler clientTo = clients.get(nickTo);
+        if (clientTo == null) {
+            from.sendMessage("Пользователь не авторизован!");
+            return;
+        }
+        clientTo.sendMessage("От " + from.getNick() + ": " + message);
+        from.sendMessage("Участнику " + nickTo + ": " + message);
     }
 }
