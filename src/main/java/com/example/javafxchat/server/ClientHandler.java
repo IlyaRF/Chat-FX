@@ -41,7 +41,7 @@ public class ClientHandler {
                 if ("/end".equals(message)) {
                     break;
                 }
-                if (message == "/privateMessage") {
+                if ("/w".equals(message)) {
 
                     final String[] params = message.split("\\p{Blank}+");
                     String nick = params[0];

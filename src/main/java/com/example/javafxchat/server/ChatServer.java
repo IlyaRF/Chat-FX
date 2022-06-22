@@ -62,7 +62,12 @@ public class ChatServer {
             from.sendMessage("Пользователь не авторизован!");
             return;
         }
-        clientTo.sendMessage("От " + from.getNick() + ": " + message);
-        from.sendMessage("Участнику " + nickTo + ": " + message);
+        if(message.startsWith("/w")) {
+            String[] split = message.split("\\p{Blank}+");
+            String nick = split[1];
+            String prMessage = split[2];
+            clientTo.sendMessage("От " + from.getNick() + ": " + prMessage);
+            from.sendMessage("Участнику " + nick + ": " + prMessage);
+        }
     }
 }
