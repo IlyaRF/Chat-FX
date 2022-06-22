@@ -11,10 +11,12 @@ public class ChatClientApp extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(ChatClientApp.class.getResource("client-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 320, 240);
-        stage.setTitle("Chat Client");
+        Scene scene = new Scene(fxmlLoader.load(), 600, 400);
+        stage.setTitle("Chat client");
         stage.setScene(scene);
         stage.show();
+
+
     }
 
     public static void main(String[] args) {
