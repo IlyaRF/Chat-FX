@@ -44,8 +44,7 @@ public class ClientHandler {
                 if (message == "/privateMessage") {
 
                     final String[] params = message.split("\\p{Blank}+");
-                    String nick = params[1];
-                    String message = params[2];
+                    String nick = params[0];
                     server.sendPrivateMessage(this, params[0], params[1]);
                     continue;
                 }
